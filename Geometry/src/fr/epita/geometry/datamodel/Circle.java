@@ -13,7 +13,7 @@ package fr.epita.geometry.datamodel;
  * @author tbrou
  *
  */
-public class Circle {
+public class Circle implements Shape{
 	private double radius;
 
 	

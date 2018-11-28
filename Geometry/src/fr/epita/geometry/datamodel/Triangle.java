@@ -10,7 +10,7 @@ package fr.epita.geometry.datamodel;
  * @author tbrou
  *
  */
-public class Triangle {
+public class Triangle implements Shape{
 	
 	private double base;
 	private double side1;
