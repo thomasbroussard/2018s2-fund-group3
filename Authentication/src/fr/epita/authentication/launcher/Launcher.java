@@ -1,12 +1,11 @@
 package fr.epita.authentication.launcher;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Launcher {
-
-	// TODO remove those hard coded credentials
-	private static final String USERNAME = "admin";
-	private static final String PASSWORD = "pwd";
+	
 
 	public static void main(String[] args) {
 		System.out.println("Welcome to the application");
@@ -43,6 +42,8 @@ public class Launcher {
 					break;
 				}
 			} while (!exit);
+		}else {
+			System.out.println("not authenticated, exiting");
 		}
 
 		scanner.close();
@@ -50,7 +51,25 @@ public class Launcher {
 	}
 
 	private static boolean authenticate(String userName, String password) {
-		return USERNAME.equals(userName) && PASSWORD.equals(password);
+		File file = new File("auth.txt");
+		Scanner scanner;
+		String user = null;
+		String pwd = null;
+		try {
+			scanner = new Scanner(file);
+			String nextLine = scanner.nextLine();
+			String[] parts = nextLine.split("=");
+			user  = parts[0];
+			pwd = parts[1];
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return (userName.equals(user) && password.equals(pwd));
+		
 	}
 
 	private static String getAnswer(Scanner scanner, String question) {
