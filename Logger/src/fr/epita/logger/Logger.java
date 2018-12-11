@@ -29,6 +29,7 @@ public class Logger {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
 		writer.println(dateFormat.format(date) + " " + message);
+		writer.flush();
 	}
 
 }

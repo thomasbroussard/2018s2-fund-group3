@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import fr.epita.logger.Logger;
+
 public class Launcher {
 	
 
 	public static void main(String[] args) {
+		Logger.logMessage("------- Program started");
 		System.out.println("Welcome to the application");
 		System.out.println("Please, enter your credentials");
 		Scanner scanner = new Scanner(System.in);
@@ -16,7 +19,7 @@ public class Launcher {
 		String password = getAnswer(scanner, "Password :");
 
 		if (authenticate(userName, password)) {
-
+			Logger.logMessage("user " + userName + "authenticated succesfully");
 			System.out.println("Welcome " + userName);
 			boolean exit = false;
 			do {
@@ -44,9 +47,11 @@ public class Launcher {
 			} while (!exit);
 		}else {
 			System.out.println("not authenticated, exiting");
+			Logger.logMessage("authentication failure for that user " + userName);
 		}
 
 		scanner.close();
+		Logger.logMessage("-------- End of program");
 
 	}
 
