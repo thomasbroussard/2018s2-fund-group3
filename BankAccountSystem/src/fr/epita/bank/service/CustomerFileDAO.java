@@ -32,6 +32,7 @@ public class CustomerFileDAO {
 		writer.println(customer.getName());
 		writer.println(customer.getAddress());
 		writer.println("-------");
+		writer.flush();
 	}
 
 	public void update(Customer customer) {
