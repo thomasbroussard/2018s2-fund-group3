@@ -15,8 +15,8 @@ public class TestCustomerToDataBase {
 		//testSearchCustomerFromDB();
 		
 		CustomerJDBCDAO dao = new CustomerJDBCDAO();
-		dao.create(new Customer("Jessica", "MAISONS-ALFORT"));
-		testSearchCustomerFromDB();
+	//	dao.create(new Customer("Jessica", "MAISONS-ALFORT"));
+		System.out.println(dao.search(new Customer("Jess", "")));
 	}
 
 	private static void testInsertIntoDatabase() throws SQLException {
