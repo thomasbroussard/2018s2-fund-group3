@@ -14,7 +14,7 @@ public class CustomerJDBCDAO {
 
 	public void create(Customer customer) {
 		String sqlCommand = "INSERT INTO CUSTOMER(NAME,ADDRESS) VALUES (?,?)";
-		try (Connection connection = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+		try (Connection connection = getConnection();
 				PreparedStatement insertStatement = connection.prepareStatement(sqlCommand);) {
 			insertStatement.setString(1, customer.getName());
 			insertStatement.setString(2, customer.getAddress());
@@ -27,17 +27,42 @@ public class CustomerJDBCDAO {
 	}
 
 	public void update(Customer customer) {
+		String updateQuery = "UPDATE CUSTOMER SET ADDRESS=? WHERE NAME=?";
 
+		
+		try (Connection connection = getConnection();
+			PreparedStatement updateStatement = connection.prepareStatement(updateQuery)){
+			updateStatement.setString(1, customer.getAddress());
+			updateStatement.setString(2, customer.getName());
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private Connection getConnection() throws SQLException {
+		Configuration conf = Configuration.getInstance();
+		String jdbcUrl = conf.getConfigurationValue("jdbc.url");
+		String user = conf.getConfigurationValue("jdbc.user");
+		String password = conf.getConfigurationValue("jdbc.password");
+		Connection connection = DriverManager.getConnection(jdbcUrl, user, password);
+		return connection;
 	}
 
 	public void delete(Customer customer) {
-
+		String deleteQuery = "DELETE CUSTOMER WHERE NAME=?";
+		try (Connection connection = getConnection();
+			PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)){
+			deleteStatement.setString(1, customer.getName());
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<Customer> search(Customer customer) {
 		List<Customer> resultList = new ArrayList<Customer>();
 		String selectQuery = "select NAME,ADDRESS from CUSTOMER WHERE NAME LIKE ? OR ADDRESS = ?";
-		try (Connection connection = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
 				) {
 
