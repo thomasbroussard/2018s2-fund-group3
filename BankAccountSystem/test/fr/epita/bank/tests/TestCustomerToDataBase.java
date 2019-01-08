@@ -15,7 +15,7 @@ public class TestCustomerToDataBase {
 		//testSearchCustomerFromDB();
 		
 		CustomerJDBCDAO dao = new CustomerJDBCDAO();
-	//	dao.create(new Customer("Jessica", "MAISONS-ALFORT"));
+		dao.create(new Customer("Jessica", "MAISONS-ALFORT"));
 		System.out.println(dao.search(new Customer("Jess", "")));
 	}
 
