@@ -4,11 +4,14 @@ import java.util.List;
 
 public class Question {
 
+	private int id;
+	
 	private String question; 
 	private List<String> topics;	 
 	private Integer difficulty;
 	
-	
+	public Question() {
+	}
 	
 	public Question(String question, List<String> topics, Integer difficulty) {
 		this.question = question;
@@ -36,5 +39,11 @@ public class Question {
 		this.difficulty = difficulty;
 	}
 	
-	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 }

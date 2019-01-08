@@ -15,7 +15,9 @@ public class Configuration {
 	private Configuration() {
 		this.properties = new Properties();
 		//TODO make the test.properties variable (use a system variable?)
-		try (InputStream is = new FileInputStream(new File("app.properties"))) {
+		String confLocation = System.getProperty("conf.location");
+		//TODO design a fallback if the system variable is not set
+		try (InputStream is = new FileInputStream(new File(confLocation))) {
 			properties.load(is);
 		} catch (IOException e) {
 			e.printStackTrace();
