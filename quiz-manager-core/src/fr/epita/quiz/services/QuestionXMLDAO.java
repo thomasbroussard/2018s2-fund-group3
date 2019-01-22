@@ -35,16 +35,37 @@ public class QuestionXMLDAO {
 		for (int i=0; i<list.getLength(); i++) {
 			Question question = new Question();
 			Element questionXML = (Element) list.item(i);
-			int order = Integer.valueOf(questionXML.getAttribute("order"));
-			String label = questionXML.getElementsByTagName("label").item(0).getTextContent();
-			int difficulty = Integer.valueOf(questionXML.getElementsByTagName("difficulty").item(0).getTextContent());
+			int order = Integer.valueOf(questionXML.getAttribute("order")); // getting order attribute from question element
+			String label = questionXML.getElementsByTagName("label").item(0).getTextContent(); //getting label element (then text content) from question element
+			int difficulty = Integer.valueOf(questionXML.getElementsByTagName("difficulty").item(0).getTextContent()); //getting difficulty element (then text content) from question element
 			question.setQuestion(label);
 			question.setDifficulty(difficulty);
-			// TODO add list of topics to question
+			
+			List<String> topics = getAllTopicsFromQuestion(questionXML);
+			question.setTopics(topics);
+			
 			listQuestions.add(question);
 		}
 		
 		return listQuestions;
+	}
+
+	private List<String> getAllTopicsFromQuestion(Element question) {
+		// get element of tag name "topics"
+		Element topicsElement = (Element) question.getElementsByTagName("topics").item(0);
+		
+		//extract all elements of tag name "topic" within the last
+		NodeList topicsList = topicsElement.getElementsByTagName("topic");
+		
+		//init array size with lenght of list of topics
+		List<String> result = new ArrayList<>();
+		
+		//loop on each topic
+		for (int i=0; i<topicsList.getLength(); i++) {
+			Element topic = (Element) topicsList.item(i);
+			result.add(topic.getTextContent()); // add topic text content to array
+		}
+		return result;
 	}
 	
 }
