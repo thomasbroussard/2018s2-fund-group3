@@ -17,8 +17,8 @@ public class TestReadFromXML {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = factory.newDocumentBuilder();
-		
 		Document doc = docBuilder.parse(new File("questions.xml")); 
+		
 		
 		NodeList list = doc.getElementsByTagName("question");
 		for (int i = 0; i < list.getLength(); i++) {
