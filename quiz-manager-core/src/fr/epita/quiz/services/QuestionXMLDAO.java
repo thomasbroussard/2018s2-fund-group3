@@ -105,6 +105,53 @@ public class QuestionXMLDAO {
 		transformXMLFile(doc);
 	}
 
+	public void update(Question question) throws SAXException, IOException, ParserConfigurationException {
+		//TODO parse file
+		Document doc = parseFile();
+		
+		//TODO get question element in xml file through question id
+		NodeList listQuestions = doc.getElementsByTagName("question");
+		for (int i=0; i<listQuestions.getLength(); i++) {
+			Element questionXML = (Element) listQuestions.item(i);
+			int idXML = Integer.valueOf(questionXML.getAttribute("id")); // !! Assuming id is in the attributes
+			if (question.getId() == idXML) {
+				//label modification
+				Element label = (Element) questionXML.getElementsByTagName("label").item(0);
+				label.setTextContent(question.getQuestion());
+				
+				//difficulty modification
+				Element difficulty = (Element) questionXML.getElementsByTagName("difficulty").item(0);
+				difficulty.setTextContent(String.valueOf(question.getDifficulty()));
+				
+				//topics modification
+				Element topics = (Element) questionXML.getElementsByTagName("topics").item(0);
+				NodeList topicList = topics.getElementsByTagName("topic");
+				
+				//loop on the old topic list of the xml element to delete them
+				for (int j=0; j<topicList.getLength(); j++) {
+					topics.removeChild(topicList.item(j));
+				}
+				
+				//loop on the new topic list of the java object to add them to the xml
+				for (String topic : question.getTopics()) {
+					Element xmlTopic = doc.createElement("topic"); // creation of an xml element "topic"
+					xmlTopic.setTextContent(topic);    //setting text content 
+					topics.appendChild(xmlTopic);      // .. and append to the "topics" element					
+				}
+			}
+			
+		}
+		
+		//TODO propagate transformation to xml file
+	}
+	
+	public void delete(Question question) {
+		//TODO parse file
+		//TODO get question to delete with id
+		//TODO use "remove child" to root element
+		//TODO propagate transformation to xml file
+	}
+	
 	private void transformXMLFile(Document doc)
 			throws TransformerFactoryConfigurationError, TransformerConfigurationException, TransformerException {
 		
