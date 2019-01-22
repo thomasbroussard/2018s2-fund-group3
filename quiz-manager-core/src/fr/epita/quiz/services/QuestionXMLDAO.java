@@ -8,6 +8,13 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,6 +27,9 @@ public class QuestionXMLDAO {
 	
 	private static final String XML_FILENAME_KEY = "xml.filename";
 
+
+
+	
 	public Document parseFile() throws SAXException, IOException, ParserConfigurationException {
 		Configuration config = Configuration.getInstance();
 		DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
@@ -66,6 +76,42 @@ public class QuestionXMLDAO {
 			result.add(topic.getTextContent()); // add topic text content to array
 		}
 		return result;
+	}
+	
+	public void create(Question question) throws SAXException, IOException, ParserConfigurationException, TransformerException {
+		Document doc = parseFile();
+		
+		Element newQuestion = doc.createElement("question");
+		newQuestion.setAttribute("id", String.valueOf(question.getId()));
+		
+		Element label = doc.createElement("label");
+		label.setTextContent(question.getQuestion());
+		newQuestion.appendChild(label);
+		
+		Element difficulty = doc.createElement("difficulty");
+		difficulty.setTextContent(String.valueOf(question.getDifficulty()));
+		newQuestion.appendChild(difficulty);
+		
+		Element topics = doc.createElement("topics"); // creation of a single "topics" element 
+													  // which will contain all the "topic" elements
+		for (String topic : question.getTopics()) { // for each topic in the java object
+			Element xmlTopic = doc.createElement("topic"); // creation of an xml element "topic"
+			xmlTopic.setTextContent(topic);    //setting text content 
+			topics.appendChild(xmlTopic);      // .. and append to the "topics" element
+		}
+		newQuestion.appendChild(topics);
+		doc.getDocumentElement().appendChild(newQuestion);
+		
+		transformXMLFile(doc);
+	}
+
+	private void transformXMLFile(Document doc)
+			throws TransformerFactoryConfigurationError, TransformerConfigurationException, TransformerException {
+		
+		Configuration config = Configuration.getInstance();
+		TransformerFactory fact = TransformerFactory.newInstance();
+		Transformer transformer = fact.newTransformer();
+		transformer.transform(new DOMSource(doc), new StreamResult(config.getConfigurationValue(XML_FILENAME_KEY)));
 	}
 	
 }
