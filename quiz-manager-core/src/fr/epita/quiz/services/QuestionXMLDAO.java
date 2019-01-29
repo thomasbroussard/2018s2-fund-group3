@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,6 +40,56 @@ public class QuestionXMLDAO {
 
 	}
 
+	public List<Question> search(Question criteria){
+		
+		List<Question> results = new ArrayList<>();
+		try {
+			List<Question> allQuestions = getAllQuestions();
+			for (Question question : allQuestions) {
+				boolean difficultyMatching = question.getDifficulty() == criteria.getDifficulty();
+				boolean topicsMatching = false;
+				for (String topic : question.getTopics()) {
+					if (criteria.getTopics().contains(topic)) {
+						topicsMatching = true;
+						break;
+					}
+				}
+				boolean questionContentMatching = question.getQuestion().contains(criteria.getQuestion());
+				
+				if (difficultyMatching || topicsMatching || questionContentMatching) {
+					results.add(question);
+				}
+			}
+			results = allQuestions
+					.stream()
+					.filter(q -> q.getDifficulty() == criteria.getDifficulty() && q.getQuestion().contains(criteria.getQuestion()))
+					.collect(Collectors.toList());
+			
+			results = allQuestions
+					.stream()
+					.filter(new Predicate<Question>() {
+
+						@Override
+						public boolean test(Question q) {
+							 return q.getDifficulty() == criteria.getDifficulty() && q.getQuestion().contains(criteria.getQuestion());
+						}
+					})
+					.collect(Collectors.toList());
+			
+			
+			
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return results;
+		
+		
+	}
+	
 	public List<Question> getAllQuestions() throws SAXException, IOException, ParserConfigurationException {
 		Document doc = parseFile(); // file parsing
 		List<Question> listQuestions = new ArrayList<>();
