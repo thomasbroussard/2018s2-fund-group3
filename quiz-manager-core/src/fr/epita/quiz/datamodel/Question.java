@@ -10,6 +10,12 @@ public class Question {
 	private List<String> topics;	 
 	private Integer difficulty;
 	
+	@Override
+	public String toString() {
+		return "Question [id=" + id + ", question=" + question + ", topics=" + topics + ", difficulty=" + difficulty
+				+ "]";
+	}
+
 	public Question() {
 	}
 	

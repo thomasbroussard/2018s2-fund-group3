@@ -19,7 +19,9 @@ public class XMLDAOTest {
 		//read();
 		
 		
-		create();
+//		create();
+		QuestionXMLDAO dao = new QuestionXMLDAO();
+		System.out.println(dao.search(new Question("java", null, null)));
 	}
 
 	private static void read() throws SAXException, IOException, ParserConfigurationException {
